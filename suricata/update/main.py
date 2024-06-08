@@ -562,6 +562,7 @@ def write_merged(filename, rulemap, dep_files):
                 print(reformatted, file=fileobj)
             else:
                 print(rule.format(), file=fileobj)
+
     shutil.move(tmp_filename, filename)
 
 def write_to_directory(directory, files, rulemap, dep_files):
