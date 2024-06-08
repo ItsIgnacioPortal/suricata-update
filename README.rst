@@ -1,3 +1,5 @@
+This fork actually works on Windows.
+
 Suricata-Update
 ===============
 
