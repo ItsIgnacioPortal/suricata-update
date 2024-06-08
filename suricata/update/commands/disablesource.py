@@ -36,5 +36,5 @@ def disable_source():
         logger.warning("Source %s is not enabled.", name)
         return 0
     logger.debug("Renaming %s to %s.disabled.", filename, filename)
-    os.rename(filename, "%s.disabled" % (filename))
+    shutil.move(filename, "%s.disabled" % (filename))
     logger.info("Source %s has been disabled", name)

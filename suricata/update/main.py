@@ -189,13 +189,14 @@ class Fetch:
             os.makedirs(config.get_cache_dir(), mode=0o770)
         logger.info("Fetching %s." % (url))
         try:
-            tmp_fileobj = tempfile.NamedTemporaryFile()
+            tmp_fileobj = tempfile.NamedTemporaryFile(delete=False)
             net.get(
                 net_arg,
                 tmp_fileobj,
                 progress_hook=self.progress_hook)
-            shutil.copyfile(tmp_fileobj.name, tmp_filename)
             tmp_fileobj.close()
+            shutil.copyfile(tmp_fileobj.name, tmp_filename)
+            os.unlink(tmp_fileobj.name)
         except URLError as err:
             if os.path.exists(tmp_filename):
                 if config.args().fail:
@@ -556,11 +557,12 @@ def write_merged(filename, rulemap, dep_files):
                         reformatted = handle_dataset_files(rule, dep_files)
                     else:
                         handle_filehash_files(rule, dep_files, kw)
+
             if reformatted:
                 print(reformatted, file=fileobj)
             else:
                 print(rule.format(), file=fileobj)
-    os.rename(tmp_filename, filename)
+    shutil.move(tmp_filename, filename)
 
 def write_to_directory(directory, files, rulemap, dep_files):
     # List of rule IDs that have been added.
@@ -624,7 +626,7 @@ def write_to_directory(directory, files, rulemap, dep_files):
             tmp_filename = ".".join([outpath, "tmp"])
             io.open(tmp_filename, encoding="utf-8", mode="w").write(
                 u"\n".join(content))
-            os.rename(tmp_filename, outpath)
+            shutil.move(tmp_filename, outpath)
 
 def write_yaml_fragment(filename, files):
     logger.info(

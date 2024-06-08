@@ -53,7 +53,7 @@ def enable_source():
     disabled_source_filename = sources.get_disabled_source_filename(name)
     if os.path.exists(disabled_source_filename):
         logger.info("Re-enabling previously disabled source for %s.", name)
-        os.rename(disabled_source_filename, enabled_source_filename)
+        shutil.move(disabled_source_filename, enabled_source_filename)
         update_params = True
 
     if not os.path.exists(sources.get_index_filename()):
